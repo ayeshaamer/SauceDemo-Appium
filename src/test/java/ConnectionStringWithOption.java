@@ -1,6 +1,6 @@
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import io.appium.java_client.android.options.UiAutomator2Options;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -8,29 +8,36 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
 
-public class ConnectionString {
+public class ConnectionStringWithOption {
+
     AppiumDriver driver;
+
     @BeforeTest
     public void initializer() throws MalformedURLException {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability("platformName", "Android");
-        capabilities.setCapability("deviceName", "emulator-5554");
-        capabilities.setCapability("automationName","UiAutomator2");
-        capabilities.setCapability("app",System.getProperty("user.dir")+"/app/ApiDemos-debug.apk");
-        capabilities.setCapability("noReset", false);
-        capabilities.setCapability("newCommandTimeout",120);
-        capabilities.setCapability("avd", "Pixel_3a");
-        capabilities.setCapability("avdLaunchTimeout", 3000000);
+        UiAutomator2Options options = new UiAutomator2Options()
+                .setDeviceName("emulator-5554")
+                .setAutomationName("UiAutomator2")
+                .setApp(System.getProperty("user.dir")+"/app/ApiDemos-debug.apk")
+                .setNewCommandTimeout(Duration.ofSeconds(120))
+                .setAvd("Pixel_3a")
+                .setAvdLaunchTimeout(Duration.ofSeconds(3000000))
+                .setNoReset(false);
 
-        driver = new AndroidDriver( new URL("http://localhost:4723"), capabilities);
-        System.out.println("Opening Appium Server");
+        //Assignment from Session Two > Added capabilities in Options method, and code is working....
+
+        URL url = new URL("http://localhost:4723");
+
+        driver = new AndroidDriver(url, options);
+
+        System.out.println("Opening Appium server using Option Class");
     }
+
     @Test
     public void sampleTest(){
         System.out.println("First Sample Test");
     }
-
 //    @AfterTest
 //    public void tearDown(){
 //        driver.quit();
@@ -48,4 +55,6 @@ public class ConnectionString {
             }
         }
     }
+
+
 }
