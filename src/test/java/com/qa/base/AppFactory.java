@@ -1,15 +1,20 @@
-package base;
+package com.qa.base;
 
-import configurationFileReader.Config.ConfigReader;
+import com.qa.utils.ConfigReader;
+import com.qa.utils.Utilities;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
 
 
 public class AppFactory {
@@ -38,6 +43,26 @@ public class AppFactory {
             exception.printStackTrace();
             throw exception;
         }
+    }
+
+    public void waitForVisibility(WebElement element){
+        new WebDriverWait(driver, Duration.ofSeconds(Utilities.WAIT)).until(ExpectedConditions.visibilityOf(element));
+    }
+
+    public void clickElement(WebElement element){
+        waitForVisibility(element);
+        element.click();
+    }
+
+    public void sendKeys(WebElement element, String text){
+        waitForVisibility(element);
+        element.sendKeys(text);
+    }
+
+
+    public String getAttribute(WebElement element, String attribute){
+        waitForVisibility(element);
+        return element.getAttribute(attribute);
     }
 
     @AfterTest
