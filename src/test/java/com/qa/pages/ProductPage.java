@@ -1,7 +1,7 @@
-package pages;
+package com.qa.pages;
 
-import base.AppDriver;
-import base.AppFactory;
+import com.qa.base.AppDriver;
+import com.qa.base.AppFactory;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import org.openqa.selenium.WebElement;
@@ -15,7 +15,5 @@ public class ProductPage  extends AppFactory {
     @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"PRODUCTS\"]")
     public WebElement productHeader;
 
-    public boolean isProductHeaderDisplayed(){
-        return productHeader.isDisplayed();
-    }
+    public String getTitle(){ return getAttribute(productHeader, "text");}
 }
