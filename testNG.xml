@@ -9,4 +9,7 @@
             <class name="com.qa.tests.LoginTest"/>
         </classes>
     </test>
+    <listeners>
+        <listener class-name="com.qa.listeners.TestListener"/>
+    </listeners>
 </suite>

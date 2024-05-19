@@ -1,20 +1,44 @@
 package com.qa.tests;
 
 import com.qa.base.AppFactory;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import com.qa.pages.LoginPage;
 import com.qa.pages.ProductPage;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 
 public class LoginTest extends AppFactory {
   LoginPage loginPage;
   ProductPage productPage;
+  InputStream inputStream;
+  JSONObject loginUser;
+
+  @BeforeClass
+  public void setupDataStream() throws IOException {
+      try {
+          String dataFileName = "data/loginUsers.json";
+          inputStream = getClass().getClassLoader().getResourceAsStream(dataFileName);
+          JSONTokener jsonTokener = new JSONTokener(Objects.requireNonNull(inputStream));
+          loginUser = new JSONObject(jsonTokener);
+      }
+      catch(Exception e){
+          e.printStackTrace();
+      }
+      finally {
+          if(inputStream!=null)
+              inputStream.close();
+      }
+  }
 
   @BeforeMethod
   public void setup(Method method){
@@ -25,8 +49,8 @@ public class LoginTest extends AppFactory {
   @Test
   public void verifyInvalidUsername(){
       System.out.println("This test is used to verify that user will get error message on entering invalid username");
-      loginPage.enterUsername("invalidUsername");
-      loginPage.enterPassword("secret_sauce");
+      loginPage.enterUsername(loginUser.getJSONObject("invalidUsername").getString("username"));
+      loginPage.enterPassword(loginUser.getJSONObject("invalidUsername").getString("password"));
       loginPage.clickLoginButton();
 
       String expectedErrorMessage="Username and password do not match any user in this service.";
@@ -38,8 +62,8 @@ public class LoginTest extends AppFactory {
   @Test
   public void verifyInvalidPassword(){
       System.out.println("This test is used to verify that user will get error message on entering invalid password");
-      loginPage.enterUsername("standard_user");
-      loginPage.enterPassword("invalidPassword");
+      loginPage.enterUsername(loginUser.getJSONObject("invalidPassword").getString("username"));
+      loginPage.enterPassword(loginUser.getJSONObject("invalidPassword").getString("password"));
       loginPage.clickLoginButton();
 
       String expectedErrorMessage="Username and password do not match any user in this service.";
@@ -50,8 +74,8 @@ public class LoginTest extends AppFactory {
   @Test
   public void verifyValidLogin(){
       System.out.println("This test is used to verify that user will see Product page on successful login on entering valid username & password");
-      loginPage.enterUsername("standard_user");
-      loginPage.enterPassword("secret_sauce");
+      loginPage.enterUsername(loginUser.getJSONObject("validUsernameAndPassword").getString("username"));
+      loginPage.enterPassword(loginUser.getJSONObject("validUsernameAndPassword").getString("password"));
       productPage = loginPage.clickLoginButton();
 
       String actualTitle = productPage.getTitle();
