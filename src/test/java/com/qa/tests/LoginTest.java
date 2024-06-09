@@ -1,6 +1,7 @@
 package com.qa.tests;
 
 import com.qa.base.AppFactory;
+import com.qa.pages.MenuPage;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.testng.Assert;
@@ -19,7 +20,9 @@ import java.util.Objects;
 
 public class LoginTest extends AppFactory {
     LoginPage loginPage;
+
     ProductPage productPage;
+    MenuPage menuPage;
     InputStream inputStream;
     JSONObject loginUser;
 
@@ -64,7 +67,7 @@ public class LoginTest extends AppFactory {
         loginPage.enterPassword(loginUser.getJSONObject("invalidPassword").getString("password"));
         loginPage.clickLoginButton();
 
-        String expectedErrorMessage = stringHashMap.get("error_invalid_username_and_password")+"Dummy";
+        String expectedErrorMessage = stringHashMap.get("error_invalid_username_and_password") + "Dummy";
         String actualErrorMessage = loginPage.getErrorMessage();
         utilities.log().info("Actual Error Message: " + actualErrorMessage + "\nExpected Error Message: " + expectedErrorMessage);
         Assert.assertEquals(actualErrorMessage, expectedErrorMessage);
@@ -81,6 +84,9 @@ public class LoginTest extends AppFactory {
         String expectedTitle = stringHashMap.get("product_title");
         utilities.log().info("Actual Product title: " + actualTitle + "\nExpected Product Title: " + expectedTitle);
         Assert.assertEquals(actualTitle, expectedTitle);
+
+        menuPage = productPage.clickSettingsButton();
+        loginPage = menuPage.clickLogoutButton();
     }
 
     @AfterTest
