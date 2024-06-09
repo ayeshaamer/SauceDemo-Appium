@@ -125,7 +125,6 @@ public class TestListener implements ITestListener {
     private void stopRecording(ITestResult result, String status) {
         if (adbScreenRecordProcess != null) {
             adbScreenRecordProcess.destroy();
-
             Map<String, String> params = new HashMap<>();
             params = result.getTestContext().getCurrentXmlTest().getAllParameters();
 
@@ -136,6 +135,9 @@ public class TestListener implements ITestListener {
             String videoDir = System.getProperty("user.dir") + File.separator + videoPath;
             String videoFilePathWithStatus = videoDir + File.separator + result.getTestClass().getRealClass().getSimpleName() + "_" + result.getName() + ".mp4"; // Unique file name based on test class name, method name, and status
             try {
+                // To make videos ready
+                Thread.sleep(2000);
+
                 // Pull video file from emulator to local machine
                 Process pullProcess = new ProcessBuilder("adb", "pull", "/sdcard/testvideo.mp4", videoFilePathWithStatus).start();
                 pullProcess.waitFor();
