@@ -1,7 +1,7 @@
 # AppiumV2 Sauce Demo App Automation
 
 ## Reporting
-Utilizing Extent Report for comprehensive reporting:
+Utilizing Extent Report for comprehensive reporting ([Link to HTML Report](ReportReadMe.html)):
 - Captures screenshots upon test failures. 
 
    ![Failed Test Screenshot](https://github.com/ayeshaamer/SauceDemo-Appium/assets/53623074/ee047f34-593f-448f-a8ec-c5ffd5f64a95)
