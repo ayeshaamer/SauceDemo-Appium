@@ -64,7 +64,7 @@ public class LoginTest extends AppFactory {
         loginPage.enterPassword(loginUser.getJSONObject("invalidPassword").getString("password"));
         loginPage.clickLoginButton();
 
-        String expectedErrorMessage = stringHashMap.get("error_invalid_username_and_password");
+        String expectedErrorMessage = stringHashMap.get("error_invalid_username_and_password")+"Dummy";
         String actualErrorMessage = loginPage.getErrorMessage();
         utilities.log().info("Actual Error Message: " + actualErrorMessage + "\nExpected Error Message: " + expectedErrorMessage);
         Assert.assertEquals(actualErrorMessage, expectedErrorMessage);

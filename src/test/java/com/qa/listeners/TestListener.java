@@ -19,10 +19,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class TestListener implements ITestListener {
+    private Process adbScreenRecordProcess;
+
     public void onTestFailure(ITestResult result) {
         if (result.getThrowable() != null) {
             StringWriter stringWriter = new StringWriter();
@@ -57,12 +62,13 @@ public class TestListener implements ITestListener {
         }
 
         ExtentReport.getTest().fail("Test Fail", MediaEntityBuilder.createScreenCaptureFromBase64String(new String(encoded, StandardCharsets.US_ASCII)).build());
+        stopRecording(result,"fail");
         ExtentReport.getTest().fail(result.getThrowable());
-
     }
 
     @Override
     public void onTestStart(ITestResult result) {
+        startRecording(result);
         ExtentReport.startTest(result.getName(), result.getMethod().getDescription())
                 .assignCategory(AppDriver.getPlatformName() + "-" + AppDriver.getDeviceName())
                 .assignAuthor("Ayesha Amer");
@@ -70,6 +76,7 @@ public class TestListener implements ITestListener {
 
     @Override
     public void onTestSuccess(ITestResult result) {
+        stopRecording(result,"pass");
         ExtentReport.getTest().log(Status.PASS, "Test Passed");
     }
 
@@ -91,6 +98,71 @@ public class TestListener implements ITestListener {
     @Override
     public void onFinish(ITestContext context) {
         ExtentReport.getExtentReports().flush();
+    }
+
+    private void startRecording(ITestResult result) {
+        Map<String, String> params = new HashMap<>();
+        params = result.getTestContext().getCurrentXmlTest().getAllParameters();
+
+        String videoPath = "videos" + File.separator + params.get("platformName") + "_" + params.get("platformVersion") + "_" + params.get("deviceName")
+                + File.separator + AppFactory.getDateTime() + File.separator + result.getTestClass().getRealClass().getSimpleName() + File.separator
+                + result.getName() + ".mp4";
+
+        String videoDir = System.getProperty("user.dir") + File.separator + videoPath;
+        File file = new File(videoDir);
+
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+
+        try {
+            adbScreenRecordProcess = new ProcessBuilder("adb", "shell", "screenrecord", "/sdcard/testvideo.mp4").start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void stopRecording(ITestResult result, String status) {
+        if (adbScreenRecordProcess != null) {
+            adbScreenRecordProcess.destroy();
+
+            Map<String, String> params = new HashMap<>();
+            params = result.getTestContext().getCurrentXmlTest().getAllParameters();
+
+            String videoPath = "videos" + File.separator + params.get("platformName") + "_" + params.get("platformVersion") + "_" + params.get("deviceName")
+                    + File.separator + AppFactory.getDateTime() + File.separator + result.getTestClass().getRealClass().getSimpleName() + File.separator
+                    + result.getName() + ".mp4";
+
+            String videoDir = System.getProperty("user.dir") + File.separator + videoPath;
+            String videoFilePathWithStatus = videoDir + File.separator + result.getTestClass().getRealClass().getSimpleName() + "_" + result.getName() + ".mp4"; // Unique file name based on test class name, method name, and status
+            try {
+                // Pull video file from emulator to local machine
+                Process pullProcess = new ProcessBuilder("adb", "pull", "/sdcard/testvideo.mp4", videoFilePathWithStatus).start();
+                pullProcess.waitFor();
+
+                // Convert the video file to a Base64 string
+                byte[] encoded = null;
+                try {
+                    encoded = Base64.encodeBase64(FileUtils.readFileToByteArray(new File(videoFilePathWithStatus)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                // Convert the video data to a data URI
+                String videoDataURI = "data:video/mp4;base64," + new String(encoded, StandardCharsets.US_ASCII);
+
+                // Create a video tag with the data URI as source
+                String videoEmbed = "<video width='320' height='240' controls><source src='" + videoDataURI + "' type='video/mp4'></video>";
+
+                // Log the video in the Extent Report as raw text
+                if (status == "pass")
+                    ExtentReport.getTest().pass("<b>Test Video:</b><br> " + videoEmbed);
+                else
+                    ExtentReport.getTest().fail("<b>Test Video:</b><br> " + videoEmbed);
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
