@@ -24,6 +24,7 @@ public class AppFactory {
     public static AppiumDriver driver;
     public static ConfigReader configReader;
     protected static HashMap<String, String> stringHashMap = new HashMap<>();
+    protected static String dateTime;
     InputStream stringIs;
     Utilities utilities;
     static Logger log = LogManager.getLogger(AppFactory.class.getName());
@@ -38,6 +39,7 @@ public class AppFactory {
             stringIs = getClass().getClassLoader().getResourceAsStream(xmlStringFileName);
             stringHashMap = utilities.parseStringXML(stringIs);
 
+            dateTime = utilities.getDateTime();
 
             DesiredCapabilities capabilities = new DesiredCapabilities();
             capabilities.setCapability("platformName", platformName);
@@ -79,6 +81,10 @@ public class AppFactory {
     public String getAttribute(WebElement element, String attribute){
         waitForVisibility(element);
         return element.getAttribute(attribute);
+    }
+
+    public static String getDateTime(){
+        return dateTime;
     }
 
     @AfterTest
