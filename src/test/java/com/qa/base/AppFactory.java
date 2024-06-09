@@ -32,12 +32,6 @@ public class AppFactory {
     @Parameters({"platformName", "platformVersion", "deviceName"})
     public void initializer(String platformName, String platformVersion, String deviceName) throws Exception {
         try {
-            log.debug("This is debug message");
-            log.info("This is info message");
-            log.warn("This is warn messgae");
-            log.error("This is error Messages");
-            log.fatal("This is fatal message");
-
             configReader = new ConfigReader();
             utilities = new Utilities();
             String xmlStringFileName = "strings/strings.xml";

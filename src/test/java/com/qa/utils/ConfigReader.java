@@ -23,7 +23,7 @@ public class ConfigReader {
             }
         }catch(FileNotFoundException exception){
             exception.printStackTrace();
-            throw  new RuntimeException("Config.properties not found at "+propertyFilePath);
+            throw  new RuntimeException("config.properties not found at "+propertyFilePath);
         }
     }
 
@@ -32,7 +32,7 @@ public class ConfigReader {
         if(platformName!=null)
             return platformName;
         else
-            throw new RuntimeException("platformName is not provided in Config.properties file");
+            throw new RuntimeException("platformName is not provided in config.properties file");
     }
 
     public  String getAppPackage(){
@@ -40,7 +40,7 @@ public class ConfigReader {
         if(appPackage!=null)
             return appPackage;
         else
-            throw new RuntimeException("appPackage is not provided in Config.properties file");
+            throw new RuntimeException("appPackage is not provided in config.properties file");
     }
 
     public  String getAppActivity(){
@@ -48,7 +48,7 @@ public class ConfigReader {
         if(appActivity!=null)
             return appActivity;
         else
-            throw new RuntimeException("appActivity is not provided in Config.properties file");
+            throw new RuntimeException("appActivity is not provided in config.properties file");
     }
 
     public  String getAutomationName(){
@@ -56,7 +56,7 @@ public class ConfigReader {
         if(automationName!=null)
             return automationName;
         else
-            throw new RuntimeException("automationName is not provided in Config.properties file");
+            throw new RuntimeException("automationName is not provided in config.properties file");
     }
 
     public  String getCommandTimeout(){
@@ -64,7 +64,7 @@ public class ConfigReader {
         if(commandTimeout!=null)
             return commandTimeout;
         else
-            throw new RuntimeException("commandTimeout is not provided in Config.properties file");
+            throw new RuntimeException("commandTimeout is not provided in config.properties file");
     }
 
     public  String getApkPath(){
@@ -72,7 +72,7 @@ public class ConfigReader {
         if(apkPath!=null)
             return apkPath;
         else
-            throw new RuntimeException("apkPath is not provided in Config.properties file");
+            throw new RuntimeException("apkPath is not provided in config.properties file");
     }
 
     public  String getNoReset(){
@@ -80,7 +80,7 @@ public class ConfigReader {
         if(noReset!=null)
             return noReset;
         else
-            throw new RuntimeException("noReset is not provided in Config.properties file");
+            throw new RuntimeException("noReset is not provided in config.properties file");
     }
 
     public  String getAppiumServerAndroidURL(){
@@ -88,7 +88,7 @@ public class ConfigReader {
         if(appiumServerEndpointURL!=null)
             return appiumServerEndpointURL;
         else
-            throw new RuntimeException("appiumServerEndpointURL is not provided in Config.properties file");
+            throw new RuntimeException("appiumServerEndpointURL is not provided in config.properties file");
     }
 
 }
