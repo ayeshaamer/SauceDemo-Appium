@@ -11,7 +11,7 @@ public class ConfigReader {
 
     public ConfigReader(){
         BufferedReader reader;
-        String propertyFilePath = "configuration/Config.properties";
+        String propertyFilePath = "configuration/config.properties";
         try{
             reader = new BufferedReader(new FileReader(propertyFilePath));
             properties = new Properties();
