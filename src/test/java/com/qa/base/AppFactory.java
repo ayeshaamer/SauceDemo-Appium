@@ -4,6 +4,8 @@ import com.qa.utils.ConfigReader;
 import com.qa.utils.Utilities;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -12,20 +14,31 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
 
-import java.net.MalformedURLException;
+import java.io.InputStream;
 import java.net.URL;
 import java.time.Duration;
+import java.util.HashMap;
 
 
 public class AppFactory {
     public static AppiumDriver driver;
     public static ConfigReader configReader;
+    protected static HashMap<String, String> stringHashMap = new HashMap<>();
+    InputStream stringIs;
+    Utilities utilities;
+    static Logger log = LogManager.getLogger(AppFactory.class.getName());
 
     @BeforeTest
     @Parameters({"platformName", "platformVersion", "deviceName"})
-    public void initializer(String platformName, String platformVersion, String deviceName) throws MalformedURLException {
+    public void initializer(String platformName, String platformVersion, String deviceName) throws Exception {
         try {
             configReader = new ConfigReader();
+            utilities = new Utilities();
+            String xmlStringFileName = "strings/strings.xml";
+            stringIs = getClass().getClassLoader().getResourceAsStream(xmlStringFileName);
+            stringHashMap = utilities.parseStringXML(stringIs);
+
+
             DesiredCapabilities capabilities = new DesiredCapabilities();
             capabilities.setCapability("platformName", platformName);
             capabilities.setCapability("platformVersion", platformVersion);
@@ -42,6 +55,9 @@ public class AppFactory {
         }catch (Exception exception){
             exception.printStackTrace();
             throw exception;
+        }finally {
+            if(stringIs != null)
+                stringIs.close();
         }
     }
 
