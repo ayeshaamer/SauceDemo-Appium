@@ -41,3 +41,7 @@ build/
 # Ignore log files
 logs/
 *.log
+
+# Ignore screenshots
+screenshots/
+

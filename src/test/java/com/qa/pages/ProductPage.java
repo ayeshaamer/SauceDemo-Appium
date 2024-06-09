@@ -7,13 +7,15 @@ import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
-public class ProductPage  extends AppFactory {
-    public ProductPage(){
+public class ProductPage extends AppFactory {
+    public ProductPage() {
         PageFactory.initElements(new AppiumFieldDecorator(AppDriver.getDriver()), this);
     }
 
     @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"PRODUCTS\"]")
     public WebElement productHeader;
 
-    public String getTitle(){ return getAttribute(productHeader, "text");}
+    public String getTitle() {
+        return getText(productHeader, "Product Page Title is: ");
+    }
 }

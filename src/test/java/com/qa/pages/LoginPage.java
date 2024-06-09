@@ -9,7 +9,7 @@ import org.openqa.selenium.support.PageFactory;
 
 
 public class LoginPage extends AppFactory {
-    public LoginPage(){
+    public LoginPage() {
         PageFactory.initElements(new AppiumFieldDecorator(AppDriver.getDriver()), this);
     }
 
@@ -22,24 +22,24 @@ public class LoginPage extends AppFactory {
     @AndroidFindBy(accessibility = "test-LOGIN")
     public WebElement loginButton;
 
-    @AndroidFindBy(xpath="//android.widget.TextView[@text=\"Username and password do not match any user in this service.\"]")
+    @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"Username and password do not match any user in this service.\"]")
     public WebElement errorMsg;
 
 
-    public void enterUsername(String username){
-        sendKeys(userNameTextBox, username);
+    public void enterUsername(String username) {
+        sendKeys(userNameTextBox, username, "Entering Username: " + username);
     }
 
-    public void enterPassword(String password){
-        sendKeys(passwordTextBox,password);
+    public void enterPassword(String password) {
+        sendKeys(passwordTextBox, password, "Entering Password: " + password);
     }
 
-    public ProductPage clickLoginButton(){
-      clickElement(loginButton);
-      return new ProductPage();
+    public ProductPage clickLoginButton() {
+        clickElement(loginButton, "Clicking on Login Button");
+        return new ProductPage();
     }
 
-    public  String getErrorMessage(){
-        return getAttribute(errorMsg,"text");
+    public String getErrorMessage() {
+        return getText(errorMsg, "Error Text is: ");
     }
 }
